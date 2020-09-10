@@ -1,0 +1,47 @@
+table {
+  width: 100%;
+}
+
+tr.example-detail-row {
+  height: 0;
+}
+
+.example-element-row td {
+  border-bottom-width: 0;
+}
+
+.example-element-detail {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.outside {
+  background: #10AC06 !important;
+}
+
+.unsureoutside {
+  background: #ff9300 !important;
+}
+
+.inside {
+  background: #F44336 !important;
+}
+
+.status-container {
+  display: flex;
+}
+
+.mat-icon {
+  user-select: none;
+  font-size: 21px;
+}
+
+.mat-spinner {
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.evacuated-persons {
+  font-size: 25px;
+}

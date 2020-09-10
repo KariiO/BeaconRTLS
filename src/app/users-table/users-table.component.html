@@ -1,0 +1,130 @@
+<table *ngIf="!eStarted else evacuation" mat-table [dataSource]="dataSource" class="mat-elevation-z8" multiTemplateDataRows>
+  <ng-container matColumnDef="uuid">
+    <th mat-header-cell *matHeaderCellDef> UUID</th>
+    <td mat-cell *matCellDef="let element"> {{element.uuid}} </td>
+
+  </ng-container>
+
+  <ng-container matColumnDef="type">
+    <th mat-header-cell *matHeaderCellDef> Type</th>
+    <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="firstName">
+    <th mat-header-cell *matHeaderCellDef> First Name</th>
+    <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="lastName">
+    <th mat-header-cell *matHeaderCellDef> Last Name</th>
+    <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="status" *ngIf="eStarted">
+    <th mat-header-cell *matHeaderCellDef> Status</th>
+    <td mat-cell *matCellDef="let element">
+      <div class="status-container">
+        <mat-chip-list>
+          <mat-chip [class]="element.status.replace(' ', '') | lowercase" selected>{{element.status}}</mat-chip>
+        </mat-chip-list>
+        <mat-icon *ngIf="element.status === 'UNSURE OUTSIDE'"
+                  matTooltip="Unsure position, probably an unconventional escape route used.">info
+        </mat-icon>
+      </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="expandedDetail">
+    <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+      <div class="example-element-detail"
+           [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+        <div><strong>Status: </strong>{{element.status}}</div>
+        <div><strong>Phone: </strong>{{element.phone}}</div>
+        <div><strong>Latitude: </strong>{{element.coordinates.lat}}</div>
+        <div><strong>Longitude: </strong>{{element.coordinates.lng}}</div>
+        <div><strong>Floor: </strong>{{element.coordinates.zLevel}}</div>
+        <button mat-flat-button color="primary" (click)="localizeUser.emit(element.uuid)">LOCALIZE</button>
+      </div>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let element; columns: displayedColumns;"
+      class="example-element-row"
+      [class.example-expanded-row]="expandedElement === element"
+      (click)="expandedElement = expandedElement === element ? null : element">
+  </tr>
+  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+
+</table>
+
+<ng-template #evacuation>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" multiTemplateDataRows>
+    <ng-container matColumnDef="uuid">
+      <th mat-header-cell *matHeaderCellDef> UUID</th>
+      <td mat-cell *matCellDef="let element"> {{element.uuid}} </td>
+
+        <td mat-footer-cell *matFooterCellDef><strong>Evacuated persons</strong></td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef> Type</th>
+      <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="firstName">
+      <th mat-header-cell *matHeaderCellDef> First Name</th>
+      <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="lastName">
+      <th mat-header-cell *matHeaderCellDef> Last Name</th>
+      <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="status" *ngIf="eStarted">
+      <th mat-header-cell *matHeaderCellDef> Status</th>
+      <td mat-cell *matCellDef="let element">
+        <div class="status-container">
+          <mat-chip-list>
+            <mat-chip [class]="element.status.replace(' ', '') | lowercase" selected>{{element.status}}</mat-chip>
+          </mat-chip-list>
+          <mat-icon *ngIf="element.status === 'UNSURE OUTSIDE'"
+                    matTooltip="Unsure position, probably an unconventional escape route used.">info
+          </mat-icon>
+        </div>
+      </td>
+        <td mat-footer-cell *matFooterCellDef>
+          <span class="evacuated-persons">{{evacuatedPersonsAmount}}/4</span>
+          <mat-spinner *ngIf="evacuatedPersonsAmount !== 4" mode="indeterminate" color="warn" diameter="25"></mat-spinner>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+        <div class="example-element-detail"
+             [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+          <div><strong>Status: </strong>{{element.status}}</div>
+          <div><strong>Phone: </strong>{{element.phone}}</div>
+          <div><strong>Latitude: </strong>{{element.coordinates.lat}}</div>
+          <div><strong>Longitude: </strong>{{element.coordinates.lng}}</div>
+          <div><strong>Floor: </strong>{{element.coordinates.zLevel}}</div>
+          <button mat-flat-button color="primary" (click)="localizeUser.emit(element.uuid)">LOCALIZE</button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let element; columns: displayedColumns;"
+        class="example-element-row"
+        [class.example-expanded-row]="expandedElement === element"
+        (click)="expandedElement = expandedElement === element ? null : element">
+    </tr>
+      <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+
+  </table>
+</ng-template>
