@@ -68,7 +68,7 @@ export class AppComponent implements AfterViewInit {
         user.coordinates.zLevel = step.zLevel;
         user.coordinates.lat = step.lat;
         user.coordinates.lng = step.lng;
-        marker.setLngLat({lng: step.lng, lat: step.lat});
+        marker.setLngLat({lng: step.lng, lat: step.lat}, {animate: true, duration: 600});
         marker.setZLevel(step.zLevel);
       });
     });
@@ -136,28 +136,14 @@ export class AppComponent implements AfterViewInit {
   }
 
   private createEmployeeMarker(lng: number, lat: number, zLevel: number): any {
-    const oneOrZero = Math.random() > 0.5 ? 1 : 0;
-
-    const employeeMarkerData = {
-      imageUrl: ['/assets/man-icon.png', '/assets/woman-icon.png'][oneOrZero],
-      width: 20,
-      height: 20,
-      offset: [0, 0],
-      lngLat: {lng, lat}
-    };
-
-    const el = document.createElement('img');
-    el.src = employeeMarkerData.imageUrl;
-    el.style.width = employeeMarkerData.width + 'px';
-    el.style.height = employeeMarkerData.height + 'px';
-
-    return new Mazemap.ZLevelMarker(el, {
+    const blueDot = new Mazemap.BlueDot({
       zLevel,
-      offset: employeeMarkerData.offset,
-      offZOpacity: 0,
+      offZOpacity: 0
     })
-      .setLngLat(employeeMarkerData.lngLat)
+      .setLngLat({lng, lat})
       .addTo(this.map);
+
+    return blueDot;
   }
 
   localizeUser(userUuid: string) {
